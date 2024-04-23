@@ -1,12 +1,8 @@
-import solid from "solid-start/vite";
 import { defineConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
-import staticAdapter from "solid-start-static";
-
 // import devtools from 'solid-devtools/vite';
 
 export default defineConfig({
-  base: "/bicarakan/",
   plugins: [
     /* 
     Uncomment the following line to enable solid-devtools.
@@ -14,7 +10,6 @@ export default defineConfig({
     */
     // devtools(),
     solidPlugin(),
-    solid({ adapter: staticAdapter() }),
   ],
   server: {
     port: 3000,
