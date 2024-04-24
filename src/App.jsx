@@ -1,5 +1,5 @@
 import { For } from "solid-js";
-import suamiIstri from "./data/suami-istri.json";
+import suamiIstri from "./data/suami-istri-2.json";
 
 const App = () => {
   return (
