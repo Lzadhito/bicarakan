@@ -1,4 +1,4 @@
-import { For, Suspense, createResource } from "solid-js";
+import { For, Show, Suspense, createResource } from "solid-js";
 import sanitize from "sanitize-html";
 import shuffle from "./utils/shuffle";
 import { useParams } from "@solidjs/router";
@@ -30,9 +30,14 @@ const App = () => {
 const Container = (props) => {
   return (
     <swiper-container class="h-screen" navigation="true" scrollbar="true">
+      <Content>CARA BERMAIN</Content>
       <For each={props.data?.howtoplay}>{(text) => <Content>{text}</Content>}</For>
       <Content>PERMAINAN DIMULAI</Content>
       <For each={shuffle(props.data?.data)}>{(text) => <Content>{text}</Content>}</For>
+      <Show when={props.data?.final?.length}>
+        <Content>FINAL</Content>
+        <For each={props.data?.final}>{(text) => <Content>{text}</Content>}</For>
+      </Show>
     </swiper-container>
   );
 };
