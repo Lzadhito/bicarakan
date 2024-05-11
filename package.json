@@ -18,6 +18,8 @@
     "vite-plugin-solid": "^2.8.2"
   },
   "dependencies": {
+    "@solidjs/router": "^0.13.3",
+    "sanitize-html": "^2.13.0",
     "solid-js": "^1.8.16",
     "swiper": "^11.1.1"
   }
