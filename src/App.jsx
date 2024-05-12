@@ -1,15 +1,15 @@
 import { For, Show, createResource } from "solid-js";
 import sanitize from "sanitize-html";
-import shuffle from "./utils/shuffle";
 import { useParams } from "@solidjs/router";
+
+import shuffle from "./utils/shuffle";
+
+const datas = import.meta.glob(`./data/*.json`);
 
 const App = () => {
   const params = useParams();
   const [data] = createResource(params.id, () => {
-    if (params.id) {
-      const test = import.meta.glob(`./data/*.json`);
-      return test[`./data/${params.id}.json`]?.()
-    }
+    if (params.id) return datas[`./data/${params.id}.json`]?.() || 404;
   });
 
   if (!params.id)
@@ -19,12 +19,15 @@ const App = () => {
       </div>
     );
 
-  // if (!data()?.length) return <div class="h-screen flex items-center justify-center">
-  //   <div>Permainan tidak ditemukan.</div>
-  // </div>
+  if (data() === 404)
+    return (
+      <div class="h-screen flex items-center justify-center">
+        <div>Permainan tidak ditemukan.</div>
+      </div>
+    );
 
   return (
-    <Show when={data.state !== 'pending'} fallback={Loading}>
+    <Show when={data.state !== "pending"} fallback={Loading}>
       <Container data={data()} />
     </Show>
   );
