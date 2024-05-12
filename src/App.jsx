@@ -1,4 +1,4 @@
-import { For, Show, Suspense, createResource } from "solid-js";
+import { For, Show, createResource } from "solid-js";
 import sanitize from "sanitize-html";
 import shuffle from "./utils/shuffle";
 import { useParams } from "@solidjs/router";
@@ -7,9 +7,8 @@ const App = () => {
   const params = useParams();
   const [data] = createResource(params.id, () => {
     if (params.id) {
-      const url = `./data/${params.id}.json`;
-      /* @vite-ignore */
-      return import(url);
+      const test = import.meta.glob(`./data/*.json`);
+      return test[`./data/${params.id}.json`]?.()
     }
   });
 
@@ -20,10 +19,14 @@ const App = () => {
       </div>
     );
 
+  // if (!data()?.length) return <div class="h-screen flex items-center justify-center">
+  //   <div>Permainan tidak ditemukan.</div>
+  // </div>
+
   return (
-    <Suspense fallback={Loading}>
+    <Show when={data.state !== 'pending'} fallback={Loading}>
       <Container data={data()} />
-    </Suspense>
+    </Show>
   );
 };
 
