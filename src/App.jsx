@@ -1,8 +1,11 @@
 import { For, Show, createResource } from "solid-js";
 import sanitize from "sanitize-html";
 import { useParams } from "@solidjs/router";
+import { register } from "swiper/element/bundle";
 
 import shuffle from "./utils/shuffle";
+
+register();
 
 const datas = import.meta.glob(`./data/*.json`);
 

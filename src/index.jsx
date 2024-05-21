@@ -3,10 +3,8 @@ import { render } from "solid-js/web";
 
 import "./index.css";
 import App from "./App";
-import { register } from "swiper/element/bundle";
 import { Route, Router } from "@solidjs/router";
 
-register();
 const root = document.getElementById("root");
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
