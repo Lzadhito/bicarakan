@@ -1,6 +1,6 @@
-import { For, Show, createEffect, createResource } from "solid-js";
+import { For, Match, Show, Switch, createResource } from "solid-js";
 import sanitize from "sanitize-html";
-import { useParams } from "@solidjs/router";
+import { useParams, useNavigate } from "@solidjs/router";
 import { register } from "swiper/element/bundle";
 
 import shuffle from "./utils/shuffle";
@@ -16,31 +16,30 @@ const App = () => {
 
   return (
     <div>
-      <Drawer titles={Object.keys(datas)} id={params.id} />
-      <PageContent data={data} id={params.id} />
+      <Drawer titles={Object.keys(datas)} />
+      <PageContent data={data} />
     </div>
   );
 };
 
 const PageContent = (props) => {
-  if (!props.id)
-    return (
-      <div class="h-[80vh] flex items-center justify-center">
-        <div>Selamat Datang!</div>
-      </div>
-    );
-
-  if (props.data() === 404)
-    return (
-      <div class="h-[80vh] flex items-center justify-center">
-        <div>Permainan tidak ditemukan.</div>
-      </div>
-    );
-
+  const params = useParams();
   return (
-    <Show when={props.data.state !== "pending"} fallback={Loading}>
-      <Container data={props.data()} />
-    </Show>
+    <Switch fallback={Loading}>
+      <Match when={!params.id}>
+        <div class="h-[80vh] flex items-center justify-center">
+          <div>Selamat Datang!</div>
+        </div>
+      </Match>
+      <Match when={props.data() === 404}>
+        <div class="h-[80vh] flex items-center justify-center">
+          <div>Permainan tidak ditemukan.</div>
+        </div>
+      </Match>
+      <Match when={props.data.state !== "pending"}>
+        <Container data={props.data()} />
+      </Match>
+    </Switch>
   );
 };
 
@@ -60,6 +59,9 @@ function getPath(str) {
 }
 
 const Drawer = (props) => {
+  const navigate = useNavigate();
+  const params = useParams();
+
   return (
     <div class="drawer z-10">
       <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
@@ -82,7 +84,7 @@ const Drawer = (props) => {
               </svg>
             </label>
           </div>
-          <div class="mx-2 flex-1 px-2">{props.id ? convertToTitleCase(props.id) : "Mari Bicarakan"}</div>
+          <div class="mx-2 flex-1 px-2">{params.id ? convertToTitleCase(params.id) : "Mari Bicarakan"}</div>
         </div>
       </div>
       <div class="drawer-side">
@@ -90,8 +92,14 @@ const Drawer = (props) => {
         <ul class="menu bg-base-200 min-h-full w-80 p-4">
           <For each={props.titles}>
             {(title) => (
-              <li>
-                <a href={`/${getPath(title)}`}>{convertToTitleCase(title)}</a>
+              <li class="relative">
+                <label
+                  onClick={() => navigate(`/${getPath(title)}`)}
+                  for="my-drawer-3"
+                  aria-label="close sidebar"
+                  class="drawer-toggle h-full w-full z-10 cursor-pointer"
+                ></label>
+                <a>{convertToTitleCase(title)}</a>
               </li>
             )}
           </For>
